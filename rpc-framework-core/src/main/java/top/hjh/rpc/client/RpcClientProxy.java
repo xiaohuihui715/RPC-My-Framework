@@ -1,5 +1,7 @@
 package top.hjh.rpc.client;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import top.hjh.rpc.entity.RpcRequest;
 import top.hjh.rpc.entity.RpcResponse;
 
@@ -12,6 +14,7 @@ import java.lang.reflect.Proxy;
  * @version 1.0
  */
 public class RpcClientProxy implements InvocationHandler {
+    private static final Logger logger = LoggerFactory.getLogger(RpcClientProxy.class);
     private String host;
     private int port;
 
@@ -26,6 +29,7 @@ public class RpcClientProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        logger.info("调用方法: {}#{}", method.getDeclaringClass().getName(), method.getName());
         RpcRequest request = RpcRequest.builder()
                 .interfaceName(method.getDeclaringClass().getName())
                 .methodName(method.getName())
@@ -34,6 +38,6 @@ public class RpcClientProxy implements InvocationHandler {
                 .build();
         RpcClient client = new RpcClient();
         //返回响应体中封装的数据
-        return ((RpcResponse) client.sendRequest(request, host, port)).getData();
+        return client.sendRequest(request, host, port);
     }
 }
