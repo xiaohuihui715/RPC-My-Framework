@@ -1,7 +1,6 @@
 package top.hjh.rpc.entity;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import top.hjh.rpc.enumeration.ResponseCode;
 
 import java.io.Serializable;
@@ -12,7 +11,6 @@ import java.io.Serializable;
  * 响应消息体
  */
 @Data
-@NoArgsConstructor
 public class RpcResponse<T> implements Serializable {
     /**
      * 响应状态码
@@ -26,6 +24,9 @@ public class RpcResponse<T> implements Serializable {
      * 响应数据
      */
     private T data;
+
+    public RpcResponse() {
+    }
 
     /**
      * 调用成功生成响应对象
