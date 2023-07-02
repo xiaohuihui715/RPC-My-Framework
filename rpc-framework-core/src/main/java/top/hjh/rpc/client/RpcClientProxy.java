@@ -3,7 +3,6 @@ package top.hjh.rpc.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.hjh.rpc.entity.RpcRequest;
-import top.hjh.rpc.entity.RpcResponse;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

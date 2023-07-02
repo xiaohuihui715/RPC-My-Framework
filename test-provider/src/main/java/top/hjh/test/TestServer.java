@@ -1,5 +1,8 @@
 package top.hjh.test;
 
+import top.hjh.rpc.api.HelloService;
+import top.hjh.rpc.registry.DefaultServiceRegistry;
+import top.hjh.rpc.registry.ServiceRegistry;
 import top.hjh.rpc.server.RpcServer;
 
 /**
@@ -8,8 +11,10 @@ import top.hjh.rpc.server.RpcServer;
  */
 public class TestServer {
     public static void main(String[] args) {
-        HelloServiceImpl service = new HelloServiceImpl();
-        RpcServer rpcServer = new RpcServer();
-        rpcServer.register(service,9000);
+        HelloService helloService = new HelloServiceImpl();
+        ServiceRegistry serviceRegistry = new DefaultServiceRegistry();
+        serviceRegistry.register(helloService);
+        RpcServer rpcServer = new RpcServer(serviceRegistry);
+        rpcServer.start(9000);
     }
 }
