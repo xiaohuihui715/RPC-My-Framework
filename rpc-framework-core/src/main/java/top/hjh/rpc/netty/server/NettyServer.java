@@ -15,6 +15,7 @@ import top.hjh.rpc.common.server.RpcServer;
 import top.hjh.rpc.serializer.HessianSerializer;
 import top.hjh.rpc.serializer.JsonSerializer;
 import top.hjh.rpc.serializer.KryoSerializer;
+import top.hjh.rpc.serializer.ProtobufSerializer;
 
 /**
  * @author 韩
@@ -41,7 +42,7 @@ public class NettyServer implements RpcServer {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
-                            pipeline.addLast(new CommonEncoder(new HessianSerializer()));
+                            pipeline.addLast(new CommonEncoder(new ProtobufSerializer()));
                             pipeline.addLast(new CommonDecoder());
                             pipeline.addLast(new NettyServerHandler());
                         }
