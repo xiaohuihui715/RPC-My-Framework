@@ -1,16 +1,21 @@
 package top.hjh.rpc.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 /**
  * @author 韩
  * @version 1.0
+ * 请求消息体
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RpcRequest implements Serializable {
     /**
      * 封装调用的接口名

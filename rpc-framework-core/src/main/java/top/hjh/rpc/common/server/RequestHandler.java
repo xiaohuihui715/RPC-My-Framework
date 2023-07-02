@@ -1,4 +1,4 @@
-package top.hjh.rpc.server;
+package top.hjh.rpc.common.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
