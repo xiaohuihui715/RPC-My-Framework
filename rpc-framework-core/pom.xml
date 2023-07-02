@@ -23,12 +23,14 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!--netty-->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>${netty-version}</version>
         </dependency>
 
+        <!--json序列化-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -45,11 +47,18 @@
             <version>2.11.0</version>
         </dependency>
 
+        <!--kryo序列化-->
         <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
             <version>4.0.2</version>
         </dependency>
 
+        <!--hessian序列化-->
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>4.0.63</version>
+        </dependency>
     </dependencies>
 </project>
