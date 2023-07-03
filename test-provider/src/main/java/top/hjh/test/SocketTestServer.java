@@ -1,6 +1,7 @@
 package top.hjh.test;
 
 import top.hjh.rpc.registry.DefaultServiceRegistry;
+import top.hjh.rpc.serializer.KryoSerializer;
 import top.hjh.rpc.socket.server.SocketServer;
 
 /**
@@ -13,6 +14,7 @@ public class SocketTestServer {
         DefaultServiceRegistry serviceRegistry = new DefaultServiceRegistry();
         serviceRegistry.register(service);
         SocketServer socketServer = new SocketServer(serviceRegistry);
+        socketServer.setSerializer(new KryoSerializer());
         socketServer.start(9001);
     }
 }

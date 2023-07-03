@@ -12,10 +12,9 @@ import org.slf4j.LoggerFactory;
 import top.hjh.rpc.codec.CommonDecoder;
 import top.hjh.rpc.codec.CommonEncoder;
 import top.hjh.rpc.common.server.RpcServer;
-import top.hjh.rpc.serializer.HessianSerializer;
-import top.hjh.rpc.serializer.JsonSerializer;
-import top.hjh.rpc.serializer.KryoSerializer;
-import top.hjh.rpc.serializer.ProtobufSerializer;
+import top.hjh.rpc.enumeration.RpcError;
+import top.hjh.rpc.exception.RpcException;
+import top.hjh.rpc.serializer.*;
 
 /**
  * @author 韩
@@ -25,8 +24,16 @@ import top.hjh.rpc.serializer.ProtobufSerializer;
 public class NettyServer implements RpcServer {
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
 
+    private CommonSerializer serializer;
+
     @Override
     public void start(int port) {
+
+        if(serializer == null) {
+            logger.error("未设置序列化器");
+            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
+        }
+
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -42,7 +49,7 @@ public class NettyServer implements RpcServer {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
-                            pipeline.addLast(new CommonEncoder(new ProtobufSerializer()));
+                            pipeline.addLast(new CommonEncoder(serializer));
                             pipeline.addLast(new CommonDecoder());
                             pipeline.addLast(new NettyServerHandler());
                         }
@@ -56,6 +63,11 @@ public class NettyServer implements RpcServer {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+
+    @Override
+    public void setSerializer(CommonSerializer serializer) {
+        this.serializer = serializer;
     }
 
 }

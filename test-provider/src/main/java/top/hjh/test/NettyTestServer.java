@@ -2,6 +2,8 @@ package top.hjh.test;
 
 import top.hjh.rpc.netty.server.NettyServer;
 import top.hjh.rpc.registry.DefaultServiceRegistry;
+import top.hjh.rpc.serializer.HessianSerializer;
+import top.hjh.rpc.serializer.KryoSerializer;
 
 /**
  * @author 韩
@@ -13,6 +15,7 @@ public class NettyTestServer {
         DefaultServiceRegistry serviceRegistry = new DefaultServiceRegistry();
         serviceRegistry.register(service);
         NettyServer server = new NettyServer();
+        server.setSerializer(new HessianSerializer());
         server.start(9999);
     }
 }
