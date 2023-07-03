@@ -16,6 +16,7 @@ import top.hjh.rpc.entity.RpcResponse;
 import top.hjh.rpc.enumeration.RpcError;
 import top.hjh.rpc.exception.RpcException;
 import top.hjh.rpc.serializer.*;
+import top.hjh.rpc.util.RpcMessageChecker;
 
 /**
  * @author 韩
@@ -72,8 +73,9 @@ public class NettyClient implements RpcClient {
                     }
                 });
                 channel.closeFuture().sync();
-                AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse");
+                AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse" + rpcRequest.getRequestId());
                 RpcResponse rpcResponse = channel.attr(key).get();
+                RpcMessageChecker.check(rpcRequest, rpcResponse);
                 return rpcResponse.getData();
             }
         } catch (InterruptedException e) {
