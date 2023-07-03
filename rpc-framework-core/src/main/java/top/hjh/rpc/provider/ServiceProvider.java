@@ -13,7 +13,7 @@ public interface ServiceProvider {
      * @param service ：注册的实体
      * @param <T>：注册实体类型
      */
-    <T> void addServiceProvider(T service);
+    <T> void addServiceProvider(T service, Class<T> serviceClass);
 
     /**
      * 获取服务注册表中的服务

@@ -15,7 +15,9 @@ import top.hjh.rpc.entity.RpcRequest;
 import top.hjh.rpc.entity.RpcResponse;
 import top.hjh.rpc.enumeration.RpcError;
 import top.hjh.rpc.exception.RpcException;
+import top.hjh.rpc.registry.NacosServiceDiscovery;
 import top.hjh.rpc.registry.NacosServiceRegistry;
+import top.hjh.rpc.registry.ServiceDiscovery;
 import top.hjh.rpc.registry.ServiceRegistry;
 import top.hjh.rpc.serializer.*;
 import top.hjh.rpc.util.RpcMessageChecker;
@@ -34,10 +36,10 @@ public class NettyClient implements RpcClient {
 
     private static final Bootstrap bootstrap;
     private CommonSerializer serializer;
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceDiscovery serviceDiscovery;
 
     public NettyClient() {
-        this.serviceRegistry = new NacosServiceRegistry();
+        this.serviceDiscovery = new NacosServiceDiscovery();
     }
 
     static {
@@ -57,7 +59,7 @@ public class NettyClient implements RpcClient {
         }
         AtomicReference<Object> result = new AtomicReference<>(null);
         try {
-            InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+            InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
             Channel channel = ChannelProvider.get(inetSocketAddress, serializer);
             if (channel.isActive()) {
                 channel.writeAndFlush(rpcRequest).addListener(future1 -> {
@@ -73,6 +75,7 @@ public class NettyClient implements RpcClient {
                 RpcMessageChecker.check(rpcRequest, rpcResponse);
                 result.set(rpcResponse.getData());
             } else {
+                channel.close();
                 System.exit(0);
             }
         } catch (InterruptedException e) {

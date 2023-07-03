@@ -10,7 +10,7 @@ import top.hjh.rpc.socket.server.SocketServer;
  */
 public class SocketTestServer {
     public static void main(String[] args) {
-        HelloServiceImpl service = new HelloServiceImpl();
+        HelloServiceImpl2 service = new HelloServiceImpl2();
         SocketServer socketServer = new SocketServer("127.0.0.1", 9998);
         socketServer.setSerializer(new KryoSerializer());
         socketServer.publishService(service, HelloService.class);
