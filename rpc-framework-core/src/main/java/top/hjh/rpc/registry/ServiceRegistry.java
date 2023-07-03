@@ -1,23 +1,25 @@
 package top.hjh.rpc.registry;
 
+import java.net.InetSocketAddress;
+
 /**
  * @author 韩
  * @version 1.0
- * 服务注册表接口
+ * nacos服务注册表接口
  */
 public interface ServiceRegistry {
 
     /**
-     * 注册服务到注册表中
-     * @param service ：注册的实体
-     * @param <T>：注册实体类型
+     * 将一个服务注册进注册表
+     * @param serviceName 服务名称
+     * @param inetSocketAddress 提供服务的地址
      */
-    <T> void register(T service);
+    void register(String serviceName, InetSocketAddress inetSocketAddress);
 
     /**
-     * 获取服务注册表中的服务
-     * @param serviceName：通过服务名获取服务
-     * @return ：服务实体
+     * 根据服务名称获取服务实体
+     * @param serviceName 服务名称
+     * @return 服务实体
      */
-    Object getService(String serviceName);
+    InetSocketAddress lookupService(String serviceName);
 }

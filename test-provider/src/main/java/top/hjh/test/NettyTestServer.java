@@ -1,9 +1,8 @@
 package top.hjh.test;
 
+import top.hjh.rpc.api.HelloService;
 import top.hjh.rpc.netty.server.NettyServer;
-import top.hjh.rpc.registry.DefaultServiceRegistry;
 import top.hjh.rpc.serializer.HessianSerializer;
-import top.hjh.rpc.serializer.KryoSerializer;
 
 /**
  * @author 韩
@@ -12,10 +11,8 @@ import top.hjh.rpc.serializer.KryoSerializer;
 public class NettyTestServer {
     public static void main(String[] args) {
         HelloServiceImpl service = new HelloServiceImpl();
-        DefaultServiceRegistry serviceRegistry = new DefaultServiceRegistry();
-        serviceRegistry.register(service);
-        NettyServer server = new NettyServer();
+        NettyServer server = new NettyServer("127.0.0.1", 9999);
         server.setSerializer(new HessianSerializer());
-        server.start(9999);
+        server.publishService(service, HelloService.class);
     }
 }

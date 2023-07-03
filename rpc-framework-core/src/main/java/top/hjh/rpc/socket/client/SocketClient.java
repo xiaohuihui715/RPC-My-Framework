@@ -8,12 +8,15 @@ import top.hjh.rpc.entity.RpcResponse;
 import top.hjh.rpc.enumeration.ResponseCode;
 import top.hjh.rpc.enumeration.RpcError;
 import top.hjh.rpc.exception.RpcException;
+import top.hjh.rpc.registry.NacosServiceRegistry;
+import top.hjh.rpc.registry.ServiceRegistry;
 import top.hjh.rpc.serializer.CommonSerializer;
 import top.hjh.rpc.util.ObjectReader;
 import top.hjh.rpc.util.ObjectWriter;
 import top.hjh.rpc.util.RpcMessageChecker;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -23,13 +26,12 @@ import java.net.Socket;
  */
 public class SocketClient implements RpcClient {
     private static final Logger logger = LoggerFactory.getLogger(SocketClient.class);
-    private final String host;
-    private final int port;
-    private CommonSerializer serializer;
 
-    public SocketClient(String host, int port) {
-        this.host = host;
-        this.port = port;
+    private CommonSerializer serializer;
+    private final ServiceRegistry serviceRegistry;
+
+    public SocketClient() {
+        this.serviceRegistry = new NacosServiceRegistry();
     }
 
     @Override
@@ -39,9 +41,11 @@ public class SocketClient implements RpcClient {
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
 
+        InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
         try (
-                Socket socket = new Socket(host, port)
+                Socket socket = new Socket()
         ) {
+            socket.connect(inetSocketAddress);
             OutputStream outputStream = socket.getOutputStream();
             InputStream inputStream = socket.getInputStream();
             ObjectWriter.writeObject(outputStream, rpcRequest, serializer);

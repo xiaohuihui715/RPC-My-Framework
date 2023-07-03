@@ -6,11 +6,15 @@ import top.hjh.rpc.common.server.RequestHandler;
 import top.hjh.rpc.common.server.RpcServer;
 import top.hjh.rpc.enumeration.RpcError;
 import top.hjh.rpc.exception.RpcException;
+import top.hjh.rpc.provider.ServiceProvider;
+import top.hjh.rpc.provider.ServiceProviderImpl;
+import top.hjh.rpc.registry.NacosServiceRegistry;
 import top.hjh.rpc.registry.ServiceRegistry;
 import top.hjh.rpc.serializer.CommonSerializer;
 import top.hjh.rpc.util.ThreadPoolFactory;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.*;
@@ -28,21 +32,35 @@ public class SocketServer implements RpcServer {
     private static final int BLOCKING_QUEUE_CAPACITY = 100;
     private final ExecutorService threadPool;
     private RequestHandler requestHandler = new RequestHandler();
-    private final ServiceRegistry serviceRegistry;
     private CommonSerializer serializer;
+    private final String host;
+    private final int port;
 
-    public SocketServer(ServiceRegistry serviceRegistry) {
-        this.serviceRegistry = serviceRegistry;
+    private final ServiceRegistry serviceRegistry;
+    private final ServiceProvider serviceProvider;
+
+    public SocketServer(String host, int port) {
+        this.host = host;
+        this.port = port;
         threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
+        this.serviceRegistry = new NacosServiceRegistry();
+        this.serviceProvider = new ServiceProviderImpl();
     }
 
     @Override
-    public void start(int port) {
+    public <T> void publishService(Object service, Class<T> serviceClass) {
 
         if(serializer == null) {
             logger.error("未设置序列化器");
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
+        serviceProvider.addServiceProvider(service);
+        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
+        start();
+    }
+
+    @Override
+    public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info("服务器启动……");
             Socket socket;

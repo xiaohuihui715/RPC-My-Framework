@@ -12,7 +12,7 @@ import top.hjh.rpc.socket.client.SocketClient;
  */
 public class SocketTestClient {
     public static void main(String[] args) {
-        SocketClient socketClient = new SocketClient("127.0.0.1", 9001);
+        SocketClient socketClient = new SocketClient();
         socketClient.setSerializer(new KryoSerializer());
         RpcClientProxy rpcClientProxy = new RpcClientProxy(socketClient);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);

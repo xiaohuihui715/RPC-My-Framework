@@ -13,7 +13,7 @@ import top.hjh.rpc.serializer.HessianSerializer;
  */
 public class NettyTestClient {
     public static void main(String[] args) {
-        RpcClient client = new NettyClient("127.0.0.1", 9999);
+        RpcClient client = new NettyClient();
         client.setSerializer(new HessianSerializer());
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         HelloService service = rpcClientProxy.getProxy(HelloService.class);

@@ -7,7 +7,9 @@ import top.hjh.rpc.serializer.CommonSerializer;
  * @version 1.0
  */
 public interface RpcServer {
-    void start(int port);
+    void start();
 
     void setSerializer(CommonSerializer serializer);
+
+    <T> void publishService(Object service, Class<T> serviceClass);
 }

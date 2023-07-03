@@ -1,6 +1,6 @@
 package top.hjh.test;
 
-import top.hjh.rpc.registry.DefaultServiceRegistry;
+import top.hjh.rpc.api.HelloService;
 import top.hjh.rpc.serializer.KryoSerializer;
 import top.hjh.rpc.socket.server.SocketServer;
 
@@ -11,10 +11,8 @@ import top.hjh.rpc.socket.server.SocketServer;
 public class SocketTestServer {
     public static void main(String[] args) {
         HelloServiceImpl service = new HelloServiceImpl();
-        DefaultServiceRegistry serviceRegistry = new DefaultServiceRegistry();
-        serviceRegistry.register(service);
-        SocketServer socketServer = new SocketServer(serviceRegistry);
+        SocketServer socketServer = new SocketServer("127.0.0.1", 9998);
         socketServer.setSerializer(new KryoSerializer());
-        socketServer.start(9001);
+        socketServer.publishService(service, HelloService.class);
     }
 }
