@@ -6,12 +6,13 @@ import top.hjh.rpc.common.server.RequestHandler;
 import top.hjh.rpc.common.server.RpcServer;
 import top.hjh.rpc.enumeration.RpcError;
 import top.hjh.rpc.exception.RpcException;
+import top.hjh.rpc.hook.ShutdownHook;
 import top.hjh.rpc.provider.ServiceProvider;
 import top.hjh.rpc.provider.ServiceProviderImpl;
 import top.hjh.rpc.registry.NacosServiceRegistry;
 import top.hjh.rpc.registry.ServiceRegistry;
 import top.hjh.rpc.serializer.CommonSerializer;
-import top.hjh.rpc.util.ThreadPoolFactory;
+import top.hjh.rpc.factory.ThreadPoolFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -60,12 +61,14 @@ public class SocketServer implements RpcServer {
 
     @Override
     public void start() {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket()) {
+            serverSocket.bind(new InetSocketAddress(host, port));
             logger.info("服务器启动……");
+            ShutdownHook.getShutdownHook().addClearAllHook();
             Socket socket;
             while ((socket = serverSocket.accept()) != null) {
                 logger.info("消费者连接: {}:{}", socket.getInetAddress(), socket.getPort());
-                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serviceRegistry, serializer));
+                threadPool.execute(new SocketRequestHandlerThread(socket, requestHandler, serializer));
             }
             threadPool.shutdown();
         } catch (IOException e) {

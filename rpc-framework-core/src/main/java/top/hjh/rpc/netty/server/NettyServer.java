@@ -14,6 +14,7 @@ import top.hjh.rpc.codec.CommonEncoder;
 import top.hjh.rpc.common.server.RpcServer;
 import top.hjh.rpc.enumeration.RpcError;
 import top.hjh.rpc.exception.RpcException;
+import top.hjh.rpc.hook.ShutdownHook;
 import top.hjh.rpc.provider.ServiceProvider;
 import top.hjh.rpc.provider.ServiceProviderImpl;
 import top.hjh.rpc.registry.NacosServiceRegistry;
@@ -81,6 +82,7 @@ public class NettyServer implements RpcServer {
                         }
                     });
             ChannelFuture future = serverBootstrap.bind(host, port).sync();
+            ShutdownHook.getShutdownHook().addClearAllHook();
             future.channel().closeFuture().sync();
 
         } catch (InterruptedException e) {
