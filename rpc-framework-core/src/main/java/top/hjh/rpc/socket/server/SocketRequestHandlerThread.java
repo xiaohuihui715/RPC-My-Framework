@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import top.hjh.rpc.common.server.RequestHandler;
 import top.hjh.rpc.entity.RpcRequest;
 import top.hjh.rpc.entity.RpcResponse;
-import top.hjh.rpc.registry.ServiceRegistry;
 import top.hjh.rpc.serializer.CommonSerializer;
 import top.hjh.rpc.util.ObjectReader;
 import top.hjh.rpc.util.ObjectWriter;

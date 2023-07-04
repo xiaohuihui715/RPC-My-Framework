@@ -9,9 +9,7 @@ import top.hjh.rpc.enumeration.ResponseCode;
 import top.hjh.rpc.enumeration.RpcError;
 import top.hjh.rpc.exception.RpcException;
 import top.hjh.rpc.registry.NacosServiceDiscovery;
-import top.hjh.rpc.registry.NacosServiceRegistry;
 import top.hjh.rpc.registry.ServiceDiscovery;
-import top.hjh.rpc.registry.ServiceRegistry;
 import top.hjh.rpc.serializer.CommonSerializer;
 import top.hjh.rpc.util.ObjectReader;
 import top.hjh.rpc.util.ObjectWriter;
@@ -67,7 +65,7 @@ public class SocketClient implements RpcClient {
                 throw new RpcException(RpcError.SERVICE_INVOCATION_FAILURE, " service:" + rpcRequest.getInterfaceName());
             }
             RpcMessageChecker.check(rpcRequest, rpcResponse);
-            return rpcResponse.getData();
+            return rpcResponse;
         } catch (IOException e) {
             logger.error("调用时有错误发生：", e);
             throw new RpcException("服务调用失败: ", e);
