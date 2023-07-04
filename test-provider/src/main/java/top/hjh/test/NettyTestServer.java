@@ -3,7 +3,6 @@ package top.hjh.test;
 import top.hjh.rpc.api.HelloService;
 import top.hjh.rpc.netty.server.NettyServer;
 import top.hjh.rpc.serializer.CommonSerializer;
-import top.hjh.rpc.serializer.HessianSerializer;
 
 /**
  * @author 韩
