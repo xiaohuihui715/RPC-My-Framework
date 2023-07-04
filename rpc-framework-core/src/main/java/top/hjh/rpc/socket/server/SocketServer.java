@@ -32,20 +32,25 @@ public class SocketServer implements RpcServer {
     private static final int KEEP_ALIVE_TIME = 60;
     private static final int BLOCKING_QUEUE_CAPACITY = 100;
     private final ExecutorService threadPool;
-    private RequestHandler requestHandler = new RequestHandler();
-    private CommonSerializer serializer;
     private final String host;
     private final int port;
 
+    private final CommonSerializer serializer;
+    private final RequestHandler requestHandler = new RequestHandler();
     private final ServiceRegistry serviceRegistry;
     private final ServiceProvider serviceProvider;
 
     public SocketServer(String host, int port) {
+        this(host, port, DEFAULT_SERIALIZER);
+    }
+
+    public SocketServer(String host, int port, Integer serializer) {
         this.host = host;
         this.port = port;
         threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
         this.serviceRegistry = new NacosServiceRegistry();
         this.serviceProvider = new ServiceProviderImpl();
+        this.serializer = CommonSerializer.getByCode(serializer);
     }
 
     @Override
@@ -76,8 +81,4 @@ public class SocketServer implements RpcServer {
         }
     }
 
-    @Override
-    public void setSerializer(CommonSerializer serializer) {
-        this.serializer = serializer;
-    }
 }

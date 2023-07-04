@@ -8,7 +8,7 @@ import top.hjh.rpc.serializer.CommonSerializer;
  * @version 1.0
  */
 public interface RpcClient {
-    Object sendRequest(RpcRequest rpcRequest);
+    int DEFAULT_SERIALIZER = CommonSerializer.KRYO_SERIALIZER;
 
-    void setSerializer(CommonSerializer serializer);
+    Object sendRequest(RpcRequest rpcRequest);
 }

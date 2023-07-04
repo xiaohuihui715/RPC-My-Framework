@@ -7,9 +7,9 @@ import top.hjh.rpc.serializer.CommonSerializer;
  * @version 1.0
  */
 public interface RpcServer {
-    void start();
+    int DEFAULT_SERIALIZER = CommonSerializer.KRYO_SERIALIZER;
 
-    void setSerializer(CommonSerializer serializer);
+    void start();
 
     <T> void publishService(T service, Class<T> serviceClass);
 }
