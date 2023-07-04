@@ -8,6 +8,8 @@ import top.hjh.rpc.entity.RpcResponse;
 import top.hjh.rpc.enumeration.ResponseCode;
 import top.hjh.rpc.enumeration.RpcError;
 import top.hjh.rpc.exception.RpcException;
+import top.hjh.rpc.loadbalancer.LoadBalancer;
+import top.hjh.rpc.loadbalancer.RandomLoadBalancer;
 import top.hjh.rpc.registry.NacosServiceDiscovery;
 import top.hjh.rpc.registry.ServiceDiscovery;
 import top.hjh.rpc.serializer.CommonSerializer;
@@ -31,11 +33,20 @@ public class SocketClient implements RpcClient {
     private final ServiceDiscovery serviceDiscovery;
 
     public SocketClient() {
-        this(DEFAULT_SERIALIZER);
+
+        this(DEFAULT_SERIALIZER, new RandomLoadBalancer());
+    }
+
+    public SocketClient(LoadBalancer loadBalancer) {
+        this(DEFAULT_SERIALIZER, loadBalancer);
     }
 
     public SocketClient(Integer serializer) {
-        this.serviceDiscovery = new NacosServiceDiscovery();
+        this(serializer, new RandomLoadBalancer());
+    }
+
+    public SocketClient(Integer serializer, LoadBalancer loadBalancer) {
+        this.serviceDiscovery = new NacosServiceDiscovery(loadBalancer);
         this.serializer = CommonSerializer.getByCode(serializer);
     }
 

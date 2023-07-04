@@ -16,7 +16,10 @@ public class SocketTestClient {
         SocketClient client = new SocketClient(CommonSerializer.KRYO_SERIALIZER);
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
-        String s = helloService.send(new Hello(222, "jack"));
-        System.out.println(s);
+        Hello hello = new Hello(14441, "四年三");
+        for (int i = 0; i < 20; i++) {
+            String res = helloService.send(hello);
+            System.out.println(res);
+        }
     }
 }
