@@ -2,6 +2,7 @@ package top.hjh.rpc.socket.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.hjh.rpc.common.server.AbstractRpcServer;
 import top.hjh.rpc.common.server.RequestHandler;
 import top.hjh.rpc.common.server.RpcServer;
 import top.hjh.rpc.enumeration.RpcError;
@@ -24,21 +25,16 @@ import java.util.concurrent.*;
  * @author 韩
  * @version 1.0
  */
-public class SocketServer implements RpcServer {
-    private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
+public class SocketServer extends AbstractRpcServer {
 
     private static final int CORE_POOL_SIZE = 5;
     private static final int MAXIMUM_POOL_SIZE = 50;
     private static final int KEEP_ALIVE_TIME = 60;
     private static final int BLOCKING_QUEUE_CAPACITY = 100;
     private final ExecutorService threadPool;
-    private final String host;
-    private final int port;
 
     private final CommonSerializer serializer;
     private final RequestHandler requestHandler = new RequestHandler();
-    private final ServiceRegistry serviceRegistry;
-    private final ServiceProvider serviceProvider;
 
     public SocketServer(String host, int port) {
         this(host, port, DEFAULT_SERIALIZER);
@@ -51,17 +47,7 @@ public class SocketServer implements RpcServer {
         this.serviceRegistry = new NacosServiceRegistry();
         this.serviceProvider = new ServiceProviderImpl();
         this.serializer = CommonSerializer.getByCode(serializer);
-    }
-
-    @Override
-    public <T> void publishService(T service, Class<T> serviceClass) {
-        if (serializer == null) {
-            logger.error("未设置序列化器");
-            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-        }
-        serviceProvider.addServiceProvider(service, serviceClass);
-        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
-        start();
+        scanServices();
     }
 
     @Override

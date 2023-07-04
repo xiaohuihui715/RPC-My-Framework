@@ -10,10 +10,11 @@ public interface ServiceProvider {
 
     /**
      * 注册服务到注册表中
-     * @param service ：注册的实体
-     * @param <T>：注册实体类型
+     * @param service 注册的服务
+     * @param serviceName  服务名
+     * @param <T>
      */
-    <T> void addServiceProvider(T service, Class<T> serviceClass);
+    <T> void addServiceProvider(T service, String serviceName);
 
     /**
      * 获取服务注册表中的服务
